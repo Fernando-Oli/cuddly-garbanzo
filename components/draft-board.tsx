@@ -6,6 +6,7 @@ import { ArrowLeft, Undo2 } from "lucide-react"
 import Image from "next/image"
 import { PickAnimation } from "./pick-animation"
 import { useState } from "react"
+import { Footer } from "./footer"
 
 interface Team {
   captain: Captain
@@ -221,6 +222,7 @@ export function DraftBoard({
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }
