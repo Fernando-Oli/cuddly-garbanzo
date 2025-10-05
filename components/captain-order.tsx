@@ -30,13 +30,13 @@ export function CaptainOrder({ captains, onReorder, onStartDraft }: CaptainOrder
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 flex flex-col items-center text-center">
           <Image src="/logo.png" alt="Kings Lendas" width={120} height={120} className="mb-4 h-32 w-auto" />
-          <h1 className="mb-2 font-bold text-4xl uppercase tracking-wider text-white">Draft Simulator</h1>
-          <p className="text-lg text-purple-300">Defina a ordem dos capitães</p>
+          <h1 className="mb-2 font-bold text-4xl tracking-wider text-white">Simulador Kings Lendas</h1>
+          <p className="text-3xl text-purple-300">Defina a ordem dos capitães</p>
         </div>
 
         <div className="rounded-lg border-2 border-[#3730a3] bg-[#1a1333]/80 p-6">
           <div className="mb-6">
-            <h2 className="mb-4 font-bold text-xl uppercase tracking-wide text-white">Ordem de Draft</h2>
+            <h2 className="mb-4 font-bold text-xl tracking-wide text-white">Ordem de Draft</h2>
             <div className="space-y-2">
               {captains.map((captain, index) => (
                 <div

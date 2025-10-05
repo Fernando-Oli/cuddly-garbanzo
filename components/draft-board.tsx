@@ -25,11 +25,11 @@ interface DraftBoardProps {
 }
 
 const POSITION_COLORS: Record<Position, string> = {
-  Top: "bg-red-600",
+  Top: "bg-green-600",
   Jungle: "bg-purple-600",
   Mid: "bg-red-600",
-  ADC: "bg-blue-500",
-  Suporte: "bg-red-600",
+  ADC: "bg-yellow-500",
+  Suporte: "bg-blue-400",
 }
 
 const POSITION_LABELS: Record<Position, string> = {
@@ -82,7 +82,7 @@ export function DraftBoard({
         <div className="flex items-center gap-4">
           <Image src="/logo.png" alt="Kings Lendas" width={80} height={80} className="h-20 w-auto" />
           <div>
-            <h1 className="font-bold text-3xl uppercase tracking-wider text-white">Draft Simulator</h1>
+            <h1 className="font-bold text-3xl tracking-wider text-white">Simulador Kings Lendas</h1>
             {!isDraftComplete && (
               <p className="text-sm text-purple-300">
                 Escolhendo: <span className="font-bold text-[#a855f7]">{currentTeam.captain.name}</span>
