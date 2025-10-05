@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { CaptainOrder } from "@/components/captain-order"
 import { DraftBoard } from "@/components/draft-board"
 import { CAPTAINS, PLAYERS, type Captain, type Player, type Position } from "@/lib/draft-data"
@@ -15,6 +15,20 @@ interface PickHistory {
   captainIndex: number
   pickIndex: number
 }
+
+interface DraftState {
+  captains: Captain[]
+  draftStarted: boolean
+  teams: Team[]
+  availablePlayers: Record<Position, Player[]>
+  pickedPlayers: string[]
+  currentCaptainIndex: number
+  pickOrder: number[]
+  currentPickIndex: number
+  pickHistory: PickHistory[]
+}
+
+const STORAGE_KEY = "kings-lendas-draft-state"
 
 export default function Home() {
   const [captains, setCaptains] = useState<Captain[]>(CAPTAINS)
@@ -32,6 +46,56 @@ export default function Home() {
   const [pickOrder, setPickOrder] = useState<number[]>([])
   const [currentPickIndex, setCurrentPickIndex] = useState(0)
   const [pickHistory, setPickHistory] = useState<PickHistory[]>([])
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    const savedState = localStorage.getItem(STORAGE_KEY)
+    if (savedState) {
+      try {
+        const state: DraftState = JSON.parse(savedState)
+        setCaptains(state.captains)
+        setDraftStarted(state.draftStarted)
+        setTeams(state.teams)
+        setAvailablePlayers(state.availablePlayers)
+        setPickedPlayers(new Set(state.pickedPlayers))
+        setCurrentCaptainIndex(state.currentCaptainIndex)
+        setPickOrder(state.pickOrder)
+        setCurrentPickIndex(state.currentPickIndex)
+        setPickHistory(state.pickHistory)
+      } catch (error) {
+        console.error("Error loading draft state:", error)
+      }
+    }
+    setIsLoaded(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isLoaded) return
+
+    const state: DraftState = {
+      captains,
+      draftStarted,
+      teams,
+      availablePlayers,
+      pickedPlayers: Array.from(pickedPlayers),
+      currentCaptainIndex,
+      pickOrder,
+      currentPickIndex,
+      pickHistory,
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+  }, [
+    captains,
+    draftStarted,
+    teams,
+    availablePlayers,
+    pickedPlayers,
+    currentCaptainIndex,
+    pickOrder,
+    currentPickIndex,
+    pickHistory,
+    isLoaded,
+  ])
 
   const handleStartDraft = () => {
     const initialTeams: Team[] = captains.map((captain) => ({
@@ -105,27 +169,24 @@ export default function Home() {
 
     const lastPick = pickHistory[pickHistory.length - 1]
 
-    // Remove player from team
     const newTeams = [...teams]
     newTeams[lastPick.captainIndex].players = newTeams[lastPick.captainIndex].players.filter(
       (p) => p.name !== lastPick.player.name,
     )
     setTeams(newTeams)
 
-    // Remove player from picked set
     const newPickedPlayers = new Set(pickedPlayers)
     newPickedPlayers.delete(lastPick.player.name)
     setPickedPlayers(newPickedPlayers)
 
-    // Remove from history
     setPickHistory(pickHistory.slice(0, -1))
 
-    // Go back to previous pick
     setCurrentPickIndex(lastPick.pickIndex)
     setCurrentCaptainIndex(lastPick.captainIndex)
   }
 
   const handleReset = () => {
+    localStorage.removeItem(STORAGE_KEY)
     setDraftStarted(false)
     setTeams([])
     setPickedPlayers(new Set())
@@ -137,13 +198,21 @@ export default function Home() {
 
   const isDraftComplete = currentPickIndex >= pickOrder.length
 
+  if (!isLoaded) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#2d2550]">
+        <p className="text-lg text-muted-foreground">Carregando...</p>
+      </div>
+    )
+  }
+
   if (!draftStarted) {
     return <CaptainOrder captains={captains} onReorder={setCaptains} onStartDraft={handleStartDraft} />
   }
 
   if (teams.length === 0) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-centerbg-[#2d2550] ">
         <p className="text-lg text-muted-foreground">Inicializando draft...</p>
       </div>
     )
