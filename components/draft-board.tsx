@@ -78,20 +78,20 @@ export function DraftBoard({
     <div className="min-h-screen bg-gradient-to-b from-[#0f0a1f] via-[#1a1333] to-[#0f0a1f] p-4">
       <PickAnimation player={lastPickedPlayer} onComplete={() => setLastPickedPlayer(null)} />
 
-      <div className="mx-auto mb-6 flex max-w-[1920px] items-center justify-between">
+      <div className="mx-auto mb-6 flex max-w-[1920px] items-center justify-between px-2">
         <div className="flex items-center gap-4">
           <Image src="/logo.png" alt="Kings Lendas" width={80} height={80} className="h-20 w-auto" />
           <div>
-            <h1 className="font-bold text-3xl tracking-wider text-white">Simulador Kings Lendas</h1>
+            <h1 className="font-bold text-3xl tracking-wider text-white text-sm2">Simulador Kings Lendas</h1>
             {!isDraftComplete && (
               <p className="text-sm text-purple-300">
-                Escolhendo: <span className="font-bold text-[#a855f7]">{currentTeam.captain.name}</span>
+                Escolhendo: <span className="font-bold text-[#a855f7] text-sm2">{currentTeam.captain.name}</span>
               </p>
             )}
             {isDraftComplete && <p className="font-bold text-lg text-[#d946ef]">Draft Completo!</p>}
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 mobile-flex-col">
           <Button
             variant="outline"
             onClick={onUndoPick}
@@ -179,7 +179,7 @@ export function DraftBoard({
               return (
                 <div key={position} className="space-y-2">
                   <div
-                    className={`rounded px-3 py-2 text-center font-bold text-sm uppercase ${POSITION_COLORS[position]} text-white`}
+                    className={`rounded px-3 py-2 text-center font-bold text-sm text-sm1 uppercase ${POSITION_COLORS[position]} text-white`}
                   >
                     {POSITION_LABELS[position]}
                   </div>
@@ -202,7 +202,7 @@ export function DraftBoard({
                                 : "cursor-not-allowed border-[#3730a3]/50 bg-[#2d2550]/50 text-gray-500"
                           }`}
                         >
-                          <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border border-[#3730a3]">
+                          <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border border-[#3730a3] mobile-hidden">
                             <Image
                               src={player.photo || "/placeholder.svg"}
                               alt={player.name}

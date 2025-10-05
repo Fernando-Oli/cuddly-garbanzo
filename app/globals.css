@@ -136,3 +136,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+@media (max-width: 640px) {
+  .mobile-hidden {
+    display: none;
+  }
+  .mobile-flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+  .text-sm1 {
+    font-size: xx-small;
+  }
+  .text-sm2 {
+    font-size: medium;
+  }
+}
