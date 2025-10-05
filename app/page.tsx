@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { CaptainOrder } from "@/components/captain-order"
 import { DraftBoard } from "@/components/draft-board"
 import { CAPTAINS, PLAYERS, type Captain, type Player, type Position } from "@/lib/draft-data"
 
@@ -17,8 +16,6 @@ interface PickHistory {
 }
 
 interface DraftState {
-  captains: Captain[]
-  draftStarted: boolean
   teams: Team[]
   availablePlayers: Record<Position, Player[]>
   pickedPlayers: string[]
@@ -31,8 +28,6 @@ interface DraftState {
 const STORAGE_KEY = "kings-lendas-draft-state"
 
 export default function Home() {
-  const [captains, setCaptains] = useState<Captain[]>(CAPTAINS)
-  const [draftStarted, setDraftStarted] = useState(false)
   const [teams, setTeams] = useState<Team[]>([])
   const [availablePlayers, setAvailablePlayers] = useState<Record<Position, Player[]>>({
     Top: [],
@@ -53,8 +48,6 @@ export default function Home() {
     if (savedState) {
       try {
         const state: DraftState = JSON.parse(savedState)
-        setCaptains(state.captains)
-        setDraftStarted(state.draftStarted)
         setTeams(state.teams)
         setAvailablePlayers(state.availablePlayers)
         setPickedPlayers(new Set(state.pickedPlayers))
@@ -71,10 +64,16 @@ export default function Home() {
 
   useEffect(() => {
     if (!isLoaded) return
+    if (teams.length > 0) return // Already initialized from localStorage
+
+    initializeDraft()
+  }, [isLoaded])
+
+  useEffect(() => {
+    if (!isLoaded) return
+    if (teams.length === 0) return
 
     const state: DraftState = {
-      captains,
-      draftStarted,
       teams,
       availablePlayers,
       pickedPlayers: Array.from(pickedPlayers),
@@ -84,26 +83,15 @@ export default function Home() {
       pickHistory,
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-  }, [
-    captains,
-    draftStarted,
-    teams,
-    availablePlayers,
-    pickedPlayers,
-    currentCaptainIndex,
-    pickOrder,
-    currentPickIndex,
-    pickHistory,
-    isLoaded,
-  ])
+  }, [teams, availablePlayers, pickedPlayers, currentCaptainIndex, pickOrder, currentPickIndex, pickHistory, isLoaded])
 
-  const handleStartDraft = () => {
-    const initialTeams: Team[] = captains.map((captain) => ({
+  const initializeDraft = () => {
+    const initialTeams: Team[] = CAPTAINS.map((captain) => ({
       captain,
       players: [],
     }))
 
-    const captainNames = new Set(captains.map((c) => c.name))
+    const captainNames = new Set(CAPTAINS.map((c) => c.name))
     const filteredPlayers: Record<Position, Player[]> = {
       Top: PLAYERS.Top.filter((p) => !captainNames.has(p.name)),
       Jungle: PLAYERS.Jungle.filter((p) => !captainNames.has(p.name)),
@@ -113,7 +101,7 @@ export default function Home() {
     }
 
     const order: number[] = []
-    const numCaptains = captains.length
+    const numCaptains = CAPTAINS.length
     const picksPerCaptain = 4
 
     for (let round = 0; round < picksPerCaptain; round++) {
@@ -134,7 +122,6 @@ export default function Home() {
     setPickOrder(order)
     setCurrentCaptainIndex(order[0])
     setCurrentPickIndex(0)
-    setDraftStarted(true)
     setPickHistory([])
   }
 
@@ -187,33 +174,25 @@ export default function Home() {
 
   const handleReset = () => {
     localStorage.removeItem(STORAGE_KEY)
-    setDraftStarted(false)
     setTeams([])
     setPickedPlayers(new Set())
     setCurrentCaptainIndex(0)
     setPickOrder([])
     setCurrentPickIndex(0)
     setPickHistory([])
+
+    // Reinitialize after a brief delay to ensure state is cleared
+    setTimeout(() => {
+      initializeDraft()
+    }, 0)
   }
 
   const isDraftComplete = currentPickIndex >= pickOrder.length
 
-  if (!isLoaded) {
+  if (!isLoaded || teams.length === 0) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#2d2550]">
-        <p className="text-lg text-muted-foreground">Carregando...</p>
-      </div>
-    )
-  }
-
-  if (!draftStarted) {
-    return <CaptainOrder captains={captains} onReorder={setCaptains} onStartDraft={handleStartDraft} />
-  }
-
-  if (teams.length === 0) {
-    return (
-      <div className="flex min-h-screen items-center justify-centerbg-[#2d2550] ">
-        <p className="text-lg text-muted-foreground">Inicializando draft...</p>
+      <div className="flex min-h-screen items-center justify-center bg-[#a855f7]">
+        <p className="text-lg text-white">Carregando draft...</p>
       </div>
     )
   }

@@ -1,15 +1,15 @@
-export type Position = "Top" | "Jungle" | "Mid" | "ADC" | "Suporte"
+export type Position = "Top" | "Jungle" | "Mid" | "ADC" | "Suporte";
 
 export interface Player {
-  name: string
-  position: Position
-  photo: string
+  name: string;
+  position: Position;
+  photo: string;
 }
 
 export interface Captain {
-  name: string
-  position: Position
-  photo: string
+  name: string;
+  position: Position;
+  photo: string;
 }
 
 const getPlayerPhoto = (name: string): string => {
@@ -21,7 +21,7 @@ const getPlayerPhoto = (name: string): string => {
     zekas: "/players/zekas.webp",
     zynts: "/players/zynts.webp",
     esa: "/players/esa.jpeg",
-    envy:  "/players/envy.jpeg",
+    envy: "/players/envy.jpeg",
     absol: "/players/absol.webp",
     accez: "/players/accez.webp",
     anato: "/players/anato.webp",
@@ -65,12 +65,14 @@ const getPlayerPhoto = (name: string): string => {
     telas: "/players/telas.jpeg",
     takeshi: "/players/takeshi.webp",
     juliera: "/players/juliera.jpeg",
-    reaper: "/players/reaper.jpeg"
+    reaper: "/players/reaper.jpeg",
   };
 
-  return realPhotos[name.toLowerCase()] || `/placeholder.svg?height=100&width=100&query=${name}`;
+  return (
+    realPhotos[name.toLowerCase()] ||
+    `/placeholder.svg?height=100&width=100&query=${name}`
+  );
 };
-
 
 export const PLAYERS: Record<Position, Player[]> = {
   Top: [
@@ -89,7 +91,11 @@ export const PLAYERS: Record<Position, Player[]> = {
     { name: "Accez", position: "Jungle", photo: getPlayerPhoto("accez") },
     { name: "Anato", position: "Jungle", photo: getPlayerPhoto("anato") },
     { name: "Dizin", position: "Jungle", photo: getPlayerPhoto("dizin") },
-    { name: "Drakehero", position: "Jungle", photo: getPlayerPhoto("drakehero") },
+    {
+      name: "Drakehero",
+      position: "Jungle",
+      photo: getPlayerPhoto("drakehero"),
+    },
     { name: "Randal", position: "Jungle", photo: getPlayerPhoto("randal") },
     { name: "Samkz", position: "Jungle", photo: getPlayerPhoto("samkz") },
     { name: "Sarolu", position: "Jungle", photo: getPlayerPhoto("sarolu") },
@@ -106,7 +112,11 @@ export const PLAYERS: Record<Position, Player[]> = {
     { name: "Leleko", position: "Mid", photo: getPlayerPhoto("leleko") },
     { name: "Qats", position: "Mid", photo: getPlayerPhoto("qats") },
     { name: "Takeshi", position: "Mid", photo: getPlayerPhoto("takeshi") },
-    { name: "Toucouille", position: "Mid", photo: getPlayerPhoto("toucouille") },
+    {
+      name: "Toucouille",
+      position: "Mid",
+      photo: getPlayerPhoto("toucouille"),
+    },
     { name: "Yoda", position: "Mid", photo: getPlayerPhoto("yoda") },
   ],
   ADC: [
@@ -133,17 +143,17 @@ export const PLAYERS: Record<Position, Player[]> = {
     { name: "Telas", position: "Suporte", photo: getPlayerPhoto("telas") },
     { name: "Esa", position: "Suporte", photo: getPlayerPhoto("esa") },
   ],
-}
+};
 
 export const CAPTAINS: Captain[] = [
-  { name: "Brucer", position: "Mid", photo: getPlayerPhoto("brucer") },
-  { name: "Absol", position: "ADC", photo: getPlayerPhoto("absol") },
   { name: "Brtt", position: "ADC", photo: getPlayerPhoto("brtt") },
   { name: "Takeshi", position: "Mid", photo: getPlayerPhoto("takeshi") },
   { name: "Yoda", position: "Mid", photo: getPlayerPhoto("yoda") },
   { name: "Kami", position: "Mid", photo: getPlayerPhoto("kami") },
-  { name: "Tay", position: "Top", photo: getPlayerPhoto("tay") },
+  { name: "Brucer", position: "Mid", photo: getPlayerPhoto("brucer") },
+  { name: "Absol", position: "ADC", photo: getPlayerPhoto("absol") },
   { name: "Minerva", position: "Jungle", photo: getPlayerPhoto("minerva") },
+  { name: "Tay", position: "Top", photo: getPlayerPhoto("tay") },
   { name: "Esa", position: "Suporte", photo: getPlayerPhoto("esa") },
   { name: "Shini", position: "Jungle", photo: getPlayerPhoto("shini") },
 ]
@@ -154,4 +164,4 @@ export const POSITION_COLORS: Record<Position, string> = {
   Mid: "bg-purple-500/20 text-purple-400 border-purple-500/30",
   ADC: "bg-red-500/20 text-red-400 border-red-500/30",
   Suporte: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-}
+};
